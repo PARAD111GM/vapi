@@ -1,0 +1,101 @@
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const apiKey = "652136ec-ab9f-4ca7-98f5-60dfb7d485fa"; // Your Public key from Vapi Dashboard.
+
+    // Updated squadConfig with the provided assistant IDs and sequential transfers
+    const squadConfig = {
+        "squad": {
+            "members": [
+                {
+                    "assistantId": "39998abb-101d-43ec-b471-03b53b015288",  // Assistant 1 ID
+                    "assistantDestinations": [
+                        {
+                            "type": "assistant",
+                            "assistantId": "cde1e06e-ac6a-4e5e-99eb-9979fc440be6",  // Assistant 2 ID
+                            "message": "",  // Disable spoken message during transfer
+                            "description": "Transfer to Assistant 2."
+                        }
+                    ]
+                },
+                {
+                    "assistantId": "cde1e06e-ac6a-4e5e-99eb-9979fc440be6",  // Assistant 2 ID
+                    "assistantDestinations": [
+                        {
+                            "type": "assistant",
+                            "assistantId": "7f16e0b3-7880-403b-ab08-112f55653847",  // Assistant 3 ID
+                            "message": "",  // Disable spoken message during transfer
+                            "description": "Transfer to Assistant 3."
+                        }
+                    ]
+                },
+                {
+                    "assistantId": "7f16e0b3-7880-403b-ab08-112f55653847"  // Assistant 3 ID
+                }
+            ]
+        }
+    };
+
+    const buttonConfig = {
+        position: "top",
+        offset: "400px",
+        width: "180px",
+        height: "180px",
+        idle: {
+            color: "#47F0FF",
+            type: "round",
+            title: "Say anything",
+            subtitle: "Don't be shy.",
+            icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone.svg",
+        },
+        loading: {
+            color: "#47F0FF",
+            type: "round",
+            title: "Connecting...",
+            subtitle: "Please wait",
+            icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg",
+        },
+        active: {
+            color: "#47F0FF",
+            type: "round",
+            title: "Call is in progress...",
+            subtitle: "End the call.",
+            icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg",
+        },
+    };
+
+    // Ensure the VAPI SDK is loaded only once
+    if (!window.vapiSDK) {
+        var scriptTag = document.createElement('script');
+        scriptTag.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+        scriptTag.defer = true;
+        scriptTag.async = true;
+        document.head.appendChild(scriptTag);
+
+        scriptTag.onload = function () {
+            if (!window.vapiSDK) {
+                console.error("Failed to load VAPI SDK.");
+                return;
+            }
+
+            try {
+                console.log("Initializing VAPI SDK with apiKey:", apiKey);
+                const vapi = window.vapiSDK.run({
+                    apiKey: apiKey,
+                    squad: squadConfig,  // Use the updated squadConfig with assistant IDs
+                    config: buttonConfig,
+                });
+
+                if (vapi) {
+                    console.log("VAPI SDK initialized successfully");
+                } else {
+                    console.error("Failed to initialize VAPI SDK.");
+                }
+            } catch (error) {
+                console.error("Error initializing VAPI SDK:", error);
+            }
+        };
+    } else {
+        console.log("VAPI SDK already loaded.");
+    }
+});
+</script>
